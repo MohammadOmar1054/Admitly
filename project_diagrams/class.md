@@ -12,16 +12,16 @@ classDiagram
         -int studentId
         -String phone
         -String address
-        +applyForAdmission()
+        +submitApplication()
         +uploadDocument()
         +checkStatus()
     }
 
-    class AdmissionOfficer {
-        -int officerId
+    class Admin {
+        -int adminId
         -String department
+        +reviewApplication()
         +verifyDocuments()
-        +approveApplication()
     }
 
     class Application {
@@ -36,7 +36,6 @@ classDiagram
         -int documentId
         -String fileName
         -String fileType
-        -Date uploadDate
         +verify()
     }
 
@@ -48,9 +47,9 @@ classDiagram
     }
 
     User <|-- Student
-    User <|-- AdmissionOfficer
+    User <|-- Admin
     
     Student "1" --> "*" Application : submits
     Application "1" *-- "*" Document : contains
     Application "1" --> "1" Payment : requires
-    AdmissionOfficer "1" --> "*" Application : reviews
+    Admin "1" --> "*" Application : reviews

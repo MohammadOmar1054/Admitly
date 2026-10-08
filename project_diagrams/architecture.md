@@ -1,7 +1,6 @@
 flowchart TD
     subgraph Presentation ["Presentation Layer"]
         Web[Web Browser]
-        Mobile[Mobile App]
     end
 
     subgraph Business ["Business Logic Layer"]
@@ -12,12 +11,11 @@ flowchart TD
     end
 
     subgraph DataLayer ["Data Layer"]
-        RDB[(Relational DB\nMySQL/PostgreSQL)]
-        DocStore[(Document Store\nAWS S3/Firebase)]
+        RDB[(Relational DB\nMySQL)]
+        DocStore[(Document Storage\nLocal / Cloud)]
     end
 
     Web --> API
-    Mobile --> API
     
     API --> AC
     API --> VM

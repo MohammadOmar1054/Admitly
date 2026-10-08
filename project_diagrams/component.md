@@ -1,5 +1,5 @@
 flowchart TD
-    subgraph Frontend ["Frontend (Web/Mobile)"]
+    subgraph Frontend ["Frontend (Web App)"]
         SP[Student Portal]
         AD[Admin Dashboard]
     end
@@ -7,8 +7,8 @@ flowchart TD
     subgraph Backend ["Backend Services"]
         Auth[Authentication Service]
         AppServ[Application Service]
-        DocServ[Document Verification Service]
-        PayServ[Payment Gateway Integration]
+        DocServ[Document Service]
+        PayServ[Payment Gateway]
         Notif[Notification Service]
     end
 
@@ -21,9 +21,10 @@ flowchart TD
     SP --> Auth
     SP --> AppServ
     SP --> PayServ
+    SP --> DocServ
     
-    AD --> DocServ
     AD --> AppServ
+    AD --> DocServ
 
     AppServ --> SDB
     AppServ --> ADB
