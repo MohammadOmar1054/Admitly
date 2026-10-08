@@ -1,1 +1,5 @@
-import Dashboard from"@/components/Dashboard";export default function L({children}:{children:React.ReactNode}){return <Dashboard role="student">{children}</Dashboard>}
+import { DashboardShell } from "@/components/layout/DashboardShell";
+
+export default function StudentLayout({ children }: { children: React.ReactNode }) {
+  return <DashboardShell role="student">{children}</DashboardShell>;
+}

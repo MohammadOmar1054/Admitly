@@ -1,12 +1,101 @@
-export type Role="student"|"admin";
-export interface User{id:string;name:string;email:string;password:string;role:Role;avatarColor:string}
-export type ApplicationStatus="draft"|"submitted"|"under_review"|"documents_pending"|"accepted"|"rejected";
-export type DocumentType="photo"|"id_proof"|"marksheet_10"|"marksheet_12"|"transfer_certificate"|"category_certificate";
-export type DocumentStatus="not_uploaded"|"uploaded"|"verified"|"rejected";
-export interface ApplicationDocument{type:DocumentType;status:DocumentStatus;fileName?:string;fileSize?:number;uploadedAt?:string;rejectionReason?:string}
-export interface PersonalDetails{fullName:string;email:string;phone:string;dob:string;gender:"male"|"female"|"other";address:string;city:string;state:string;pincode:string;guardianName:string;guardianPhone:string}
-export interface AcademicDetails{board10:string;percentage10:number;year10:number;board12:string;stream12:string;percentage12:number;year12:number;schoolName:string}
-export interface CoursePreference{firstChoice:string;secondChoice?:string;thirdChoice?:string}
-export interface TimelineEvent{id:string;label:string;note?:string;at:string;status:ApplicationStatus}
-export interface Application{id:string;userId:string;status:ApplicationStatus;personal:PersonalDetails;academic:AcademicDetails;courses:CoursePreference;documents:ApplicationDocument[];timeline:TimelineEvent[];adminRemarks?:string;createdAt:string;updatedAt:string;submittedAt?:string}
-export interface AnalyticsSummary{total:number;byStatus:Record<ApplicationStatus,number>;byCourse:Record<string,number>;acceptanceRate:number;averagePercentage:number}
+export type Role = "student" | "admin";
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: Role;
+  avatarColor: string;
+}
+
+export type ApplicationStatus =
+  | "draft"
+  | "submitted"
+  | "under_review"
+  | "documents_pending"
+  | "accepted"
+  | "rejected";
+
+export type DocumentType =
+  | "photo"
+  | "id_proof"
+  | "marksheet_10"
+  | "marksheet_12"
+  | "transfer_certificate"
+  | "category_certificate";
+
+export type DocumentStatus = "not_uploaded" | "uploaded" | "verified" | "rejected";
+
+export interface ApplicationDocument {
+  type: DocumentType;
+  status: DocumentStatus;
+  fileName?: string;
+  fileSize?: number;
+  uploadedAt?: string;
+  rejectionReason?: string;
+}
+
+export interface PersonalDetails {
+  fullName: string;
+  email: string;
+  phone: string;
+  dob: string;
+  gender: "male" | "female" | "other";
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+  guardianName: string;
+  guardianPhone: string;
+}
+
+export interface AcademicDetails {
+  board10: string;
+  percentage10: number;
+  year10: number;
+  board12: string;
+  stream12: string;
+  percentage12: number;
+  year12: number;
+  schoolName: string;
+}
+
+export interface CoursePreference {
+  firstChoice: string;
+  secondChoice?: string;
+  thirdChoice?: string;
+}
+
+export interface TimelineEvent {
+  id: string;
+  label: string;
+  note?: string;
+  at: string;
+  status: ApplicationStatus;
+}
+
+export interface Application {
+  id: string;
+  userId: string;
+  status: ApplicationStatus;
+  personal: PersonalDetails;
+  academic: AcademicDetails;
+  courses: CoursePreference;
+  documents: ApplicationDocument[];
+  timeline: TimelineEvent[];
+  adminRemarks?: string;
+  createdAt: string;
+  updatedAt: string;
+  submittedAt?: string;
+}
+
+export interface AnalyticsSummary {
+  total: number;
+  byStatus: Record<ApplicationStatus, number>;
+  byCourse: Record<string, number>;
+  acceptanceRate: number;
+  averagePercentage: number;
+  weeklySubmissions: number[];
+  averageReviewDays: number;
+}

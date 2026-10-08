@@ -1,1 +1,58 @@
-"use client";import{useMemo,useState}from"react";import Link from"next/link";import{useApplications}from"@/context/ApplicationsContext";import{Badge,Card}from"@/components/ui";export default function Page(){const{applications}=useApplications();const[q,setQ]=useState("");const rows=useMemo(()=>applications.filter(a=>`${a.personal.fullName} ${a.personal.email} ${a.id}`.toLowerCase().includes(q.toLowerCase())),[applications,q]);return <><h1 className="text-3xl font-bold">Applications</h1><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search applicant, email or ID" className="mt-6 w-full max-w-md rounded-xl border border-slate-200 bg-white p-3"/><Card className="mt-5 overflow-x-auto p-0"><table className="w-full text-left text-sm"><thead className="bg-slate-50"><tr>{["Applicant","ID","Course","12th %","Docs","Status",""].map(h=><th className="p-4" key={h}>{h}</th>)}</tr></thead><tbody>{rows.slice(0,10).map(a=><tr key={a.id} className="border-t"><td className="p-4"><b>{a.personal.fullName}</b><br/><span className="text-xs text-slate-500">{a.personal.email}</span></td><td className="p-4">{a.id}</td><td className="p-4">{a.courses.firstChoice}</td><td className="p-4">{a.academic.percentage12}%</td><td className="p-4">{a.documents.filter(d=>d.status==="verified").length}/6</td><td className="p-4"><Badge status={a.status}/></td><td className="p-4"><Link className="font-semibold text-brand-600" href={`/admin/applications/${a.id}`}>Review</Link></td></tr>)}</tbody></table>{!rows.length&&<p className="p-10 text-center text-slate-500">No applications match your search.</p>}</Card></>}
+"use client";
+
+import { useMemo, useState } from "react";
+import { Users } from "lucide-react";
+import type { ApplicationStatus } from "@/types";
+import { useApplications } from "@/context/ApplicationsContext";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { FilterBar } from "@/components/admin/FilterBar";
+import { ApplicationsTable } from "@/components/admin/ApplicationsTable";
+
+export default function AdminApplicationsPage() {
+  const { applications, loading } = useApplications();
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState("all");
+  const [course, setCourse] = useState("all");
+  const [sort, setSort] = useState("newest");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  const filtered = useMemo(() => {
+    const result = applications.filter((application) => {
+      const searchable = `${application.personal.fullName} ${application.id} ${application.personal.email}`.toLowerCase();
+      const matchesQuery = searchable.includes(query.toLowerCase());
+      const matchesStatus = status === "all" || application.status === (status as ApplicationStatus);
+      const matchesCourse = course === "all" || application.courses.firstChoice === course;
+      return matchesQuery && matchesStatus && matchesCourse;
+    });
+    result.sort((first, second) => {
+      if (sort === "oldest") return first.createdAt.localeCompare(second.createdAt);
+      if (sort === "name") return first.personal.fullName.localeCompare(second.personal.fullName);
+      return second.createdAt.localeCompare(first.createdAt);
+    });
+    return result;
+  }, [applications, course, query, sort, status]);
+
+  const changeFilter = <T,>(setter: (value: T) => void) => (value: T) => {
+    setter(value);
+    setPage(1);
+  };
+  const clear = () => {
+    setQuery("");
+    setStatus("all");
+    setCourse("all");
+    setSort("newest");
+    setPage(1);
+  };
+
+  if (loading) return <div className="space-y-4"><Skeleton className="h-12" /><Skeleton className="h-20" /><Skeleton className="h-96" /></div>;
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-semibold text-brand-600">ADMISSIONS DESK</p><h1 className="mt-2 text-3xl font-bold">Applications</h1><p className="mt-2 text-slate-500">Search, filter and review every application.</p></div><span className="rounded-xl bg-white px-4 py-3 text-sm shadow-sm"><b>{filtered.length}</b> <span className="text-slate-500">matching records</span></span></div>
+      <div className="mt-6"><FilterBar query={query} status={status} course={course} sort={sort} onQueryChange={changeFilter(setQuery)} onStatusChange={changeFilter(setStatus)} onCourseChange={changeFilter(setCourse)} onSortChange={changeFilter(setSort)} onClear={clear} /></div>
+      {filtered.length === 0 ? <EmptyState className="mt-6" title="No applications found" description="Try another search or clear the filters." icon={Users} /> : <ApplicationsTable applications={filtered.slice((page - 1) * pageSize, page * pageSize)} page={page} pageSize={pageSize} total={filtered.length} onPageChange={setPage} />}
+    </div>
+  );
+}
