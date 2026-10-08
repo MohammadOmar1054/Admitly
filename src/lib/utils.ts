@@ -1,0 +1,2 @@
+import {clsx,type ClassValue} from "clsx"; import {twMerge} from "tailwind-merge";
+export const cn=(...v:ClassValue[])=>twMerge(clsx(v)); export const formatDate=(d:string)=>new Intl.DateTimeFormat("en-IN",{dateStyle:"medium"}).format(new Date(d)); export const generateId=()=>`ADM-2026-${Math.floor(1000+Math.random()*9000)}`; export const initials=(s:string)=>s.split(" ").map(x=>x[0]).join("").slice(0,2);

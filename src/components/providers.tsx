@@ -1,0 +1,1 @@
+"use client";import {AuthProvider}from"@/context/AuthContext";import{ToastProvider}from"@/context/ToastContext";import{ApplicationsProvider}from"@/context/ApplicationsContext";export default function Providers({children}:{children:React.ReactNode}){return <ToastProvider><AuthProvider><ApplicationsProvider>{children}</ApplicationsProvider></AuthProvider></ToastProvider>}
