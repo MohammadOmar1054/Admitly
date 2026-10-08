@@ -14,12 +14,12 @@ export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
 export function Select({ label, error, options, className, id, ...props }: SelectProps) {
   const selectId = id ?? props.name;
   return (
-    <label className="block text-sm font-medium text-slate-700" htmlFor={selectId}>
+    <label className="block text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor={selectId}>
       {label}
       <select
         id={selectId}
         className={cn(
-          "focus mt-2 w-full rounded-xl border bg-white px-4 py-3",
+          "focus mt-2 w-full rounded-xl border bg-white px-4 py-3 text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100",
           error ? "border-rose-300" : "border-slate-200",
           className,
         )}

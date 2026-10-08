@@ -16,5 +16,5 @@ export function DashboardShell({ children, role }: DashboardShellProps) {
   const { authorized } = useAuthGuard(role);
   const [menuOpen, setMenuOpen] = useState(false);
   if (!authorized) return <div className="min-h-screen animate-pulse p-8 text-sm text-slate-400">Loading your workspace…</div>;
-  return <div className="min-h-screen bg-slate-50 md:flex"><Sidebar role={role} open={menuOpen} onClose={() => setMenuOpen(false)} /><section className="min-w-0 flex-1"><Topbar role={role} onMenuClick={() => setMenuOpen(true)} /><main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8"><PageTransition>{children}</PageTransition></main></section></div>;
+  return <div className="min-h-screen bg-slate-50 transition-colors duration-300 dark:bg-[#080d19] md:flex"><Sidebar role={role} open={menuOpen} onClose={() => setMenuOpen(false)} /><section className="min-w-0 flex-1"><Topbar role={role} onMenuClick={() => setMenuOpen(true)} /><main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8"><PageTransition>{children}</PageTransition></main></section></div>;
 }

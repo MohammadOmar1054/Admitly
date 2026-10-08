@@ -10,8 +10,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variants = {
   primary: "bg-brand-600 text-white shadow-sm hover:bg-brand-700",
-  secondary: "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
-  ghost: "bg-transparent text-slate-600 hover:bg-slate-100",
+  secondary: "border border-slate-200 bg-white text-slate-700 hover:border-brand-200 hover:bg-brand-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-brand-700 dark:hover:bg-slate-800",
+  ghost: "bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
   danger: "bg-rose-600 text-white hover:bg-rose-700",
 };
 
@@ -34,7 +34,7 @@ export function Button({
       whileTap={reducedMotion ? undefined : { scale: 0.98 }}
       whileHover={reducedMotion ? undefined : { y: -1 }}
       className={cn(
-        "focus rounded-xl font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+      "focus rounded-xl font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50",
         variants[variant],
         sizes[size],
         className,

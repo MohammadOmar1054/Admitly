@@ -28,7 +28,7 @@ export function GlitterBackground({ density = 14, className = "" }: GlitterBackg
       {particles.slice(0, density).map((particle) => (
         <motion.span
           key={particle.id}
-          className="absolute rounded-full bg-brand-300 shadow-[0_0_10px_2px_rgba(129,140,248,0.55)]"
+          className="absolute rounded-full bg-brand-300 shadow-[0_0_10px_2px_rgba(129,140,248,0.55)] dark:bg-cyan-200 dark:shadow-[0_0_12px_2px_rgba(103,232,249,0.6)]"
           style={{ left: particle.left, top: particle.top, width: particle.size, height: particle.size }}
           animate={{ opacity: [0.12, 0.8, 0.18], scale: [0.7, 1.2, 0.8], y: [0, -8, 0] }}
           transition={{ duration: particle.duration, delay: particle.delay, repeat: Infinity, ease: "easeInOut" }}

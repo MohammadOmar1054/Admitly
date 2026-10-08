@@ -11,3 +11,4 @@ export { EmptyState } from "./EmptyState";
 export { Toast } from "./Toast";
 export { Tabs } from "./Tabs";
 export { GlitterBackground } from "./GlitterBackground";
+export { ThemeToggle } from "./ThemeToggle";
