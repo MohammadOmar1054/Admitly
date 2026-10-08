@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     Start((Start)) --> Visit[Visit Admission Portal]
     Visit --> Login[Login / Register]

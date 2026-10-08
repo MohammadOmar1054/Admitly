@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     subgraph Frontend ["Frontend (Web App)"]
         SP[Student Portal]
