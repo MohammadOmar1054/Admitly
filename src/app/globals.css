@@ -3,16 +3,16 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-200: #a7f3d0;
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #059669;
+  --color-brand-700: #047857;
+  --color-brand-800: #065f46;
+  --color-brand-900: #064e3b;
   --color-accent-50: #fffbeb;
   --color-accent-100: #fef3c7;
   --color-accent-200: #fde68a;
@@ -41,25 +41,69 @@ html {
 }
 
 body {
-  background: #f6f8fc;
+  background: #f5faf8;
   color: #172033;
   font-family: var(--font-inter), Arial, sans-serif;
   transition: background-color 280ms ease, color 280ms ease;
 }
 
 html.dark body {
-  background: #080d19;
+  background: #07110f;
   color: #e5eaf5;
 }
 
 ::selection {
-  background: #c7d2fe;
-  color: #1e1b4b;
+  background: #a7f3d0;
+  color: #064e3b;
 }
 
 html.dark ::selection {
-  background: #3730a3;
-  color: #eef2ff;
+  background: #047857;
+  color: #ecfdf5;
+}
+
+.ambient-grid {
+  background-image:
+    linear-gradient(rgb(16 185 129 / 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(16 185 129 / 0.055) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% -20%, rgb(16 185 129 / 0.12), transparent 65%);
+  background-size: 48px 48px, 48px 48px, 100% 100%;
+  mask-image: linear-gradient(to bottom, black, rgb(0 0 0 / 0.72) 55%, transparent);
+}
+
+html.dark .ambient-grid {
+  background-image:
+    linear-gradient(rgb(52 211 153 / 0.075) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(52 211 153 / 0.075) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% -20%, rgb(16 185 129 / 0.18), transparent 65%);
+}
+
+.ambient-orb-one {
+  background: radial-gradient(circle, rgb(16 185 129 / 0.2), rgb(45 212 191 / 0.06) 48%, transparent 72%);
+  filter: blur(42px);
+}
+
+.ambient-orb-two {
+  background: radial-gradient(circle, rgb(20 184 166 / 0.17), rgb(132 204 22 / 0.055) 48%, transparent 72%);
+  filter: blur(48px);
+}
+
+html.dark .ambient-orb-one {
+  background: radial-gradient(circle, rgb(16 185 129 / 0.24), rgb(45 212 191 / 0.075) 48%, transparent 72%);
+}
+
+html.dark .ambient-orb-two {
+  background: radial-gradient(circle, rgb(20 184 166 / 0.2), rgb(132 204 22 / 0.075) 48%, transparent 72%);
+}
+
+.ambient-particle {
+  background: #10b981;
+  box-shadow: 0 0 12px 3px rgb(16 185 129 / 0.35), 0 0 28px rgb(45 212 191 / 0.2);
+}
+
+html.dark .ambient-particle {
+  background: #6ee7b7;
+  box-shadow: 0 0 14px 3px rgb(52 211 153 / 0.5), 0 0 34px rgb(45 212 191 / 0.26);
 }
 
 .nav-glow {
@@ -89,16 +133,58 @@ html.dark ::selection {
 }
 
 .glass-panel {
-  border: 1px solid rgb(255 255 255 / 62%);
-  background: rgb(255 255 255 / 74%);
-  box-shadow: 0 18px 55px -35px rgb(37 51 93 / 35%);
-  backdrop-filter: blur(18px);
+  border: 1px solid rgb(255 255 255 / 70%);
+  background: rgb(255 255 255 / 68%);
+  box-shadow: 0 18px 55px -35px rgb(6 78 59 / 32%);
+  backdrop-filter: blur(22px);
 }
 
 html.dark .glass-panel {
-  border-color: rgb(148 163 184 / 15%);
-  background: rgb(15 23 42 / 76%);
-  box-shadow: 0 20px 60px -35px rgb(0 0 0 / 80%);
+  border-color: rgb(110 231 183 / 0.16);
+  background: rgb(8 23 20 / 78%);
+  box-shadow: 0 20px 60px -35px rgb(0 0 0 / 82%);
+}
+
+html.dark .text-slate-950:not([class*="dark:text-"]),
+html.dark .text-slate-900:not([class*="dark:text-"]) {
+  color: #f1f5f9;
+}
+
+html.dark .text-slate-800:not([class*="dark:text-"]),
+html.dark .text-slate-700:not([class*="dark:text-"]) {
+  color: #dbe7e2;
+}
+
+html.dark .text-slate-600:not([class*="dark:text-"]),
+html.dark .text-slate-500:not([class*="dark:text-"]) {
+  color: #a8bbb4;
+}
+
+html.dark .text-slate-400:not([class*="dark:text-"]) {
+  color: #8ea49b;
+}
+
+html.dark .bg-white:not([class*="dark:bg-"]),
+html.dark [class*="bg-white/"]:not([class*="dark:bg-"]) {
+  background-color: rgb(13 29 25 / 0.86);
+}
+
+html.dark .bg-slate-50:not([class*="dark:bg-"]) {
+  background-color: rgb(10 25 21 / 0.82);
+}
+
+html.dark .bg-slate-100:not([class*="dark:bg-"]) {
+  background-color: rgb(17 36 31 / 0.9);
+}
+
+html.dark .bg-slate-200:not([class*="dark:bg-"]) {
+  background-color: rgb(31 54 47 / 0.92);
+}
+
+html.dark .border-slate-100:not([class*="dark:border-"]),
+html.dark .border-slate-200:not([class*="dark:border-"]),
+html.dark .border-slate-300:not([class*="dark:border-"]) {
+  border-color: rgb(148 163 184 / 0.2);
 }
 
 h1,
@@ -131,5 +217,9 @@ h3 {
   .nav-glow::after {
     animation: none;
     display: none;
+  }
+
+  .ambient-grid {
+    mask-image: none;
   }
 }

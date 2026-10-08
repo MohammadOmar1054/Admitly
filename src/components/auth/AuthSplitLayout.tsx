@@ -8,7 +8,7 @@ export interface AuthSplitLayoutProps {
 
 export function AuthSplitLayout({ children, register = false }: AuthSplitLayoutProps) {
   return (
-    <main className="grid min-h-screen bg-white text-slate-900 transition-colors dark:bg-[#080d19] dark:text-slate-100 lg:grid-cols-2">
+    <main className="grid min-h-screen text-slate-900 transition-colors dark:text-slate-100 lg:grid-cols-2">
       <section className="flex items-center justify-center p-5 sm:p-8">
         <div className="w-full max-w-md">
           <div className="mb-10 flex items-center justify-between"><Link href="/" className="text-xl font-extrabold text-brand-600 dark:text-brand-300">admitly<span className="text-amber-500">.</span></Link><ThemeToggle /></div>

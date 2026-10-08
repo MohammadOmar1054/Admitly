@@ -7,5 +7,5 @@ import { StatsStrip } from "@/components/landing/StatsStrip";
 import { Footer, Navbar } from "@/components/layout";
 
 export default function HomePage() {
-  return <main className="min-h-screen bg-white text-slate-900 transition-colors duration-300 dark:bg-[#080d19] dark:text-slate-100"><Navbar /><Hero /><StatsStrip /><Features /><HowItWorks /><FAQ /><CallToAction /><Footer /></main>;
+  return <main className="min-h-screen text-slate-900 transition-colors duration-300 dark:text-slate-100"><Navbar /><Hero /><StatsStrip /><Features /><HowItWorks /><FAQ /><CallToAction /><Footer /></main>;
 }
