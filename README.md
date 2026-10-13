@@ -93,7 +93,7 @@ The diagram describes the product workflow; it does not imply integrated payment
 
 ### Current implementation architecture
 
-The application is a Next.js client interface backed by a small data-access module. React contexts coordinate authentication, application state, and notifications across the UI. Supabase Auth handles sign-in and registration, while the `profiles` and `applications` tables provide application data. The current document workflow stores document metadata in application records; it does not upload file contents to an object-storage bucket.
+The application is a Next.js client interface backed by a small data-access module. React contexts coordinate authentication, application state, and notifications across the UI. Supabase Auth handles sign-in and registration, while the `profiles` and `applications` tables provide application data. Uploaded documents are stored in a private Supabase Storage bucket; application records contain their metadata and storage paths. Students and administrators view documents through short-lived signed URLs.
 
 ```mermaid
 flowchart LR
@@ -351,7 +351,9 @@ The implementation expects a Supabase project with:
 
 The repository does not include database migrations or SQL schema setup. Configure the schema and policies for your Supabase project before using the application with persistent data. Never expose a Supabase service-role key in a browser application; the client uses only the public anon key and relies on database policies to protect records.
 
-Document selection currently records document metadata such as file name and size in the application record. The file bytes are not sent to Supabase Storage or another file service. The payment, email-notification, and dedicated document-storage integrations shown in the conceptual diagrams have not been implemented.
+The document upload error `Bucket not found` means the bucket has not been created in your Supabase project. In the Supabase Dashboard, open **SQL Editor**, paste and run [`supabase/storage-setup.sql`](./supabase/storage-setup.sql). It creates the private `application-documents` bucket (5 MB limit; JPG, PNG, and PDF) and the policies that allow students to upload/read/delete their own files and administrators to read them. This script is safe to run again.
+
+Document previews use signed URLs that expire after one minute. Existing application records created before Storage uploads were enabled contain metadata only; applicants need to re-upload those files before they can be previewed. The payment and email-notification integrations shown in conceptual diagrams have not been implemented.
 
 ## Getting started
 

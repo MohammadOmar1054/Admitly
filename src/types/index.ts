@@ -32,6 +32,8 @@ export interface ApplicationDocument {
   status: DocumentStatus;
   fileName?: string;
   fileSize?: number;
+  storagePath?: string;
+  mimeType?: string;
   uploadedAt?: string;
   rejectionReason?: string;
 }

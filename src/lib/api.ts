@@ -277,27 +277,73 @@ async function mutate(id: string, update: (application: Application) => void) {
 export async function uploadDocument(
   id: string,
   type: DocumentType,
-  file: { name: string; size: number },
+  file: File,
 ) {
-  return mutate(id, (application) => {
-    const existing = application.documents.find((document) => document.type === type);
-    const next = {
-      type,
-      status: "uploaded" as const,
-      fileName: file.name,
-      fileSize: file.size,
-      uploadedAt: new Date().toISOString(),
-    };
-    if (existing) {
-      Object.assign(existing, next);
-      delete existing.rejectionReason;
-    } else {
-      application.documents.push(next);
-    }
-    application.timeline.push(
-      event(application.status, `Uploaded ${type.replaceAll("_", " ")}`),
+  const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+  if (!allowedTypes.includes(file.type) || file.size > 5 * 1024 * 1024) {
+    throw new Error("Choose a JPG, PNG, or PDF file up to 5 MB.");
+  }
+
+  const application = await getApplicationById(id);
+  if (!application) throw new Error("Application not found");
+  const extension = file.type === "image/jpeg" ? "jpg" : file.type === "image/png" ? "png" : "pdf";
+  const storagePath = `${id}/${type}/${crypto.randomUUID()}.${extension}`;
+  const { error: uploadError } = await supabase.storage
+    .from("application-documents")
+    .upload(storagePath, file, { contentType: file.type, upsert: false });
+  if (uploadError) {
+    throw new Error(
+      `Document upload failed: ${uploadError.message}. Confirm the private "application-documents" bucket exists and your account has permission to upload to it.`,
     );
-  });
+  }
+
+  try {
+    const updated = await mutate(id, (current) => {
+      const existing = current.documents.find((document) => document.type === type);
+      const next = {
+        type,
+        status: "uploaded" as const,
+        fileName: file.name,
+        fileSize: file.size,
+        storagePath,
+        mimeType: file.type,
+        uploadedAt: new Date().toISOString(),
+      };
+      if (existing) {
+        Object.assign(existing, next);
+        delete existing.rejectionReason;
+      } else {
+        current.documents.push(next);
+      }
+      current.timeline.push(
+        event(current.status, `Uploaded ${type.replaceAll("_", " ")}`),
+      );
+    });
+    return updated;
+  } catch (cause) {
+    const { error: cleanupError } = await supabase.storage
+      .from("application-documents")
+      .remove([storagePath]);
+    if (cleanupError) {
+      throw new Error(
+        `Could not save the document metadata (${cause instanceof Error ? cause.message : "unknown error"}). The uploaded file could not be cleaned up (${cleanupError.message}).`,
+      );
+    }
+    throw cause;
+  }
+}
+
+export async function getDocumentViewUrl(applicationId: string, type: DocumentType) {
+  const application = await getApplicationById(applicationId);
+  const document = application?.documents.find((item) => item.type === type);
+  if (!document?.storagePath) {
+    throw new Error("This document file is unavailable. Please upload it again.");
+  }
+  const { data, error } = await supabase.storage
+    .from("application-documents")
+    .createSignedUrl(document.storagePath, 60);
+  if (error) throw new Error(error.message);
+  return data.signedUrl;
 }
 
 export async function verifyDocument(id: string, type: DocumentType) {

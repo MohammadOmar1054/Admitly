@@ -50,6 +50,13 @@ export default function StudentApplyPage() {
     setCourse(application.courses.firstChoice);
   }, [application]);
 
+  useEffect(() => {
+    const requestedStep = Number(new URLSearchParams(window.location.search).get("step"));
+    if (Number.isInteger(requestedStep) && requestedStep >= 0 && requestedStep < steps.length) {
+      setStep(requestedStep);
+    }
+  }, []);
+
   const submitted = Boolean(application && application.status !== "draft");
   const documents = useMemo(() => application?.documents ?? [], [application]);
 
@@ -62,6 +69,20 @@ export default function StudentApplyPage() {
       setSaved(true);
       toast.success("Draft saved");
       window.setTimeout(() => setSaved(false), 1800);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const openDocuments = async () => {
+    if (!user) return;
+    setBusy(true);
+    try {
+      await api.saveDraft(user.id, { personal, academic, courses: { ...application?.courses, firstChoice: course } });
+      await refresh();
+      router.push("/student/documents?returnTo=application");
+    } catch (cause) {
+      toast.error(cause instanceof Error ? cause.message : "Could not save your application before opening documents.");
     } finally {
       setBusy(false);
     }
@@ -146,7 +167,7 @@ export default function StudentApplyPage() {
         {step === 0 && <PersonalStep value={personal} errors={errors} onChange={setPersonalField} />}
         {step === 1 && <AcademicStep value={academic} errors={errors} onChange={setAcademicField} />}
         {step === 2 && <CourseStep value={course} percentage12={academic.percentage12} error={errors.firstChoice} onChange={setCourse} />}
-        {step === 3 && <DocumentsStep documents={documents} error={errors.documents} />}
+        {step === 3 && <DocumentsStep documents={documents} error={errors.documents} disabled={busy} onUploadDocuments={() => void openDocuments()} />}
         {step === 4 && <ReviewStep personal={personal} academic={academic} course={course} documents={documents} />}      </motion.div></AnimatePresence>
       <div className="mt-7 flex flex-wrap items-center justify-between gap-3"><Button type="button" variant="secondary" disabled={step === 0 || busy} onClick={() => setStep((current) => Math.max(0, current - 1))}><ArrowLeft className="mr-2 inline" size={15} />Back</Button>{step < 4 ? <Button type="submit" disabled={busy}>Save & continue <ArrowRight className="ml-2 inline" size={15} /></Button> : <Button type="button" disabled={busy} onClick={() => setConfirm(true)}>Submit application <Check className="ml-2 inline" size={15} /></Button>}</div>
       </Card></form>

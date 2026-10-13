@@ -12,7 +12,7 @@ interface ApplicationsContextValue {
   loading: boolean;
   refresh: () => Promise<void>;
   refreshApplications: () => Promise<void>;
-  upload: (type: DocumentType, file: { name: string; size: number }) => Promise<void>;
+  upload: (type: DocumentType, file: File) => Promise<void>;
   status: (status: ApplicationStatus, remarks?: string) => Promise<void>;
   updateApplicationStatus: (id: string, status: ApplicationStatus, remarks?: string) => Promise<void>;
   verify: (id: string, type: DocumentType) => Promise<void>;
@@ -73,9 +73,12 @@ export function ApplicationsProvider({ children }: { children: React.ReactNode }
     void refresh();
   }, [refresh]);
 
-  const upload = async (type: DocumentType, file: { name: string; size: number }) => {
-    if (!application) return;
-    setApplication(await api.uploadDocument(application.id, type, file));
+  const upload = async (type: DocumentType, file: File) => {
+    const target = application ?? (user?.role === "student" ? await api.getApplicationByUser(user.id) : null);
+    if (!target) throw new Error("Your application draft could not be found. Return to Apply and save your details before uploading.");
+    const updated = await api.uploadDocument(target.id, type, file);
+    setApplication(updated);
+    setApplications((items) => items.some((item) => item.id === target.id) ? items.map((item) => item.id === target.id ? updated : item) : [...items, updated]);
     toast.success("Document uploaded");
   };
 

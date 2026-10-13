@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { CheckCircle2, Circle, ExternalLink } from "lucide-react";
 import type { ApplicationDocument } from "@/types";
 import { DOCUMENT_META } from "@/lib/constants";
@@ -9,9 +8,11 @@ import { Progress } from "@/components/ui/Progress";
 export interface DocumentsStepProps {
   documents: ApplicationDocument[];
   error?: string;
+  onUploadDocuments: () => void;
+  disabled?: boolean;
 }
 
-export function DocumentsStep({ documents, error }: DocumentsStepProps) {
+export function DocumentsStep({ documents, error, onUploadDocuments, disabled = false }: DocumentsStepProps) {
   const required = Object.entries(DOCUMENT_META).filter(([, meta]) => meta.required);
   const complete = required.filter(([type]) => documents.some((document) => document.type === type && (document.status === "uploaded" || document.status === "verified"))).length;
   return (
@@ -27,7 +28,7 @@ export function DocumentsStep({ documents, error }: DocumentsStepProps) {
           return <div key={type} className="flex items-center gap-3 rounded-xl border border-slate-200 p-3"><span className={isReady ? "text-emerald-600" : "text-slate-300"}>{isReady ? <CheckCircle2 size={19} /> : <Circle size={19} />}</span><div className="min-w-0 flex-1"><p className="text-sm font-semibold">{meta.label}{!meta.required && <span className="ml-2 text-xs font-normal text-slate-400">Optional</span>}</p><p className="mt-1 truncate text-xs text-slate-500">{document?.rejectionReason ? `Revision needed: ${document.rejectionReason}` : document?.fileName ?? "No file uploaded"}</p></div><span className={`shrink-0 text-xs font-semibold ${document?.status === "rejected" ? "text-rose-700" : isReady ? "text-emerald-700" : "text-slate-400"}`}>{document?.status?.replaceAll("_", " ") ?? (meta.required ? "required" : "optional")}</span></div>;
         })}
       </div>
-      <Link href="/student/documents" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-700">Upload or replace documents <ExternalLink size={15} /></Link>
+      <button type="button" disabled={disabled} onClick={onUploadDocuments} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-700 disabled:cursor-wait disabled:opacity-60">{disabled ? "Saving application…" : "Upload or replace documents"} <ExternalLink size={15} /></button>
     </section>
   );
 }
